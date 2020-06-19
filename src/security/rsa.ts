@@ -1,34 +1,16 @@
-/**
- * @author: hukun
- * @Date: 2019-06-06 17:42
- * @description
- * RSA 算法相关
- */
 import NodeRSA from "node-rsa";
 
 class ProxyRsa {
   private key: NodeRSA;
 
-  /**
-   *
-   * @param {NodeRSA} rsa
-   */
   constructor(rsa: NodeRSA) {
     this.key = rsa;
   }
 
-  /**
-   * 获取公钥
-   * @return {string}
-   */
   getPublicDer() {
     return this.key.exportKey("pkcs8-public-pem");
   }
 
-  /**
-   * 获取私钥
-   * @return {string}
-   */
   getPrivateDer() {
     return this.key.exportKey("pkcs8-private-pem");
   }
@@ -89,34 +71,20 @@ class ProxyRsa {
   }
 }
 
-export const RSA = {
-  /**
-   * @param {number} size
-   */
-  new(size: number = 512): ProxyRsa {
-    const key = new NodeRSA({ b: size });
-    key.setOptions({ encryptionScheme: "pkcs1" });
-    return new ProxyRsa(key);
-  },
+export function createRsaByPublicKey(publicPem: string) {
+  const key = new NodeRSA(publicPem, "pkcs8-public-pem");
+  key.setOptions({ encryptionScheme: "pkcs1" });
+  return new ProxyRsa(key);
+}
 
-  /**
-   *  导入公钥
-   * @param {string} publicPem
-   * @return {string}
-   */
-  importPublicKey(publicPem: string) {
-    const key = new NodeRSA(publicPem, "pkcs8-public-pem");
-    key.setOptions({ encryptionScheme: "pkcs1" });
-    return new ProxyRsa(key);
-  },
-  /**
-   * 导入私钥
-   * @param {string} privatePem
-   * @return {string}
-   */
-  importPrivateKey(privatePem: string) {
-    const key = new NodeRSA(privatePem, "pkcs8-private-pem");
-    key.setOptions({ encryptionScheme: "pkcs1" });
-    return new ProxyRsa(key);
-  },
-};
+export function createRsa(size: number = 512): ProxyRsa {
+  const key = new NodeRSA({ b: size });
+  key.setOptions({ encryptionScheme: "pkcs1" });
+  return new ProxyRsa(key);
+}
+
+export function createRsaByPrivateKey(privatePem: string) {
+  const key = new NodeRSA(privatePem, "pkcs8-private-pem");
+  key.setOptions({ encryptionScheme: "pkcs1" });
+  return new ProxyRsa(key);
+}

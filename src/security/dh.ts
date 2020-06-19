@@ -1,23 +1,18 @@
-/**
- * @author: hukun
- * @Date: 2019-06-06 17:42
- * @description
- * dh 算法相关
- */
-import * as crypto from "crypto";
+// @ts-ignore
+import crypto from "crypto-browserify";
 
-export class DH {
-  private dh: crypto.DiffieHellman;
+export class ECDH {
+  private ecdh: crypto.ECDH;
 
-  constructor(primeLength = 1024, generator = 5) {
-    this.dh = crypto.createDiffieHellman(primeLength, generator);
+  constructor() {
+    this.ecdh = crypto.createECDH("secp256k1");
   }
 
-  getKey() {
-    return this.dh.generateKeys();
+  getPublicKey() {
+    return this.ecdh.generateKeys("hex");
   }
 
-  getSecret(clientPubKey: string) {
-    return this.dh.computeSecret(clientPubKey, "base64");
+  getSecret(key: string) {
+    return this.ecdh.computeSecret(key, "hex", "hex");
   }
 }

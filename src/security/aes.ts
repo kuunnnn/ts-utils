@@ -1,131 +1,35 @@
-/**
- * @author: hukun
- * @Date: 2019-06-06 17:42
- * @description
- * aes 算法相关
- */
-import aesjs from "aes-js";
-import randombytes from "randombytes";
+import forge from "node-forge";
 
-class Cbc {
-  /**
-   *
-   * @param {number} size
-   * @return {Buffer}
-   */
-  static createKey(size = 32) {
-    return randombytes(size);
+export class AES_CBC {
+  static genRandomBytes(size = 32) {
+    return forge.random.getBytesSync(size);
   }
 
-  /**
-   * @return {Buffer}
-   */
-  static createIv(): Buffer {
-    return randombytes(16);
+  static bytesToHex(text: string) {
+    return forge.util.bytesToHex(text);
   }
 
-  /**
-   *
-   * @param {string} text
-   * @param {number} len
-   * @param {number} val
-   * @return {Buffer}
-   */
-  static fill(text: string, len = 16, val = 0): Buffer {
-    let textBytes = Buffer.from(text);
-    if (textBytes.length % len !== 0) {
-      const remainder = textBytes.length % len;
-      textBytes = Buffer.concat([
-        textBytes,
-        Buffer.allocUnsafe(len - remainder).fill(val),
-      ]);
-    }
-    return textBytes;
+  static hexToBytes(text: string) {
+    return forge.util.hexToBytes(text);
   }
 
-  /**
-   *
-   * @param {string} text
-   * @param {[]|Buffer} key
-   * @param {Buffer} iv
-   * @return {string}
-   */
-  static encrypt(text: string, key: any[] | Buffer, iv: Buffer): string {
-    // 将文本转换为字节（文本必须是16个字节的倍数）
-    const textBytes = aesjs.utils.utf8.toBytes(Cbc.fill(text).toString());
-    const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv);
-    const encryptedBytes = aesCbc.encrypt(textBytes);
-    // 要打印或存储二进制数据，您可以将其转换为十六进制
-    return aesjs.utils.hex.fromBytes(encryptedBytes);
+  static encrypt(text: string, key: string, iv: string) {
+    const cipher = forge.cipher.createCipher("AES-CBC", key);
+    cipher.start({ iv: iv });
+    cipher.update(forge.util.createBuffer(text));
+    cipher.finish();
+    return cipher.output.toHex();
   }
 
-  /**
-   *
-   * @param {string} encryptedHex
-   * @param {[]|Buffer} key
-   * @param {Buffer} iv
-   * @return {string}
-   */
-  static decrypt(
-    encryptedHex: string,
-    key: any[] | Buffer,
-    iv: any[] | Buffer
-  ) {
-    // 准备解密十六进制字符串时，将其转换回字节
-    const encryptedBytes = aesjs.utils.hex.toBytes(encryptedHex);
-    //  密码块链接操作模式保持内部state，所以解密新实例必须实例化。
-    const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv);
-    const decryptedBytes = aesCbc.decrypt(encryptedBytes);
-    //  将我们的字节转换回文本
-    return aesjs.utils.utf8.fromBytes(decryptedBytes);
-  }
-}
-
-class Ctr {
-  /**
-   *
-   * @param {string} text
-   * @param {string} key
-   * @param {number} iv
-   * @return {string}
-   */
-  static encrypt(text: string, key: string, iv: number = 5) {
-    //  “文本可以是您想要的任何长度，不需要填充。”
-    const textBytes = aesjs.utils.utf8.toBytes(text);
-    const keyBytes = aesjs.utils.hex.toBytes(key);
-    // 计数器是可选的，如果省略，则从1开始
-    const aesCtr = new aesjs.ModeOfOperation.ctr(
-      keyBytes,
-      new aesjs.Counter(iv)
-    );
-    const encryptedBytes = aesCtr.encrypt(textBytes);
-    // 要打印或存储二进制数据，您可以将其转换为十六进制
-    return aesjs.utils.hex.fromBytes(encryptedBytes);
+  static bufferToBytes(buf: string) {
+    return forge.util.createBuffer(buf).bytes();
   }
 
-  /**
-   *
-   * @param {string} encryptedHex
-   * @param {string} key
-   * @param {number} iv
-   * @return {string}
-   */
-  static decrypt(encryptedHex: string, key: string, iv: number = 5) {
-    // 准备解密十六进制字符串时，将其转换回字节
-    const encryptedBytes = aesjs.utils.hex.toBytes(encryptedHex);
-    const keyBytes = aesjs.utils.hex.toBytes(key);
-    //  密码块链接操作模式保持内部state，所以解密新实例必须实例化。
-    const aesCtr = new aesjs.ModeOfOperation.ctr(
-      keyBytes,
-      new aesjs.Counter(iv)
-    );
-    const decryptedBytes = aesCtr.decrypt(encryptedBytes);
-    //  将我们的字节转换回文本
-    return aesjs.utils.utf8.fromBytes(decryptedBytes);
+  static decrypt(cipher: string, key: string, iv: string) {
+    const decipher = forge.cipher.createDecipher("AES-CBC", key);
+    decipher.start({ iv: iv });
+    decipher.update(forge.util.createBuffer(forge.util.hexToBytes(cipher)));
+    decipher.finish();
+    return decipher.output.toHex();
   }
-}
-
-export class AES {
-  static cbc = Cbc;
-  static ctr = Ctr;
 }
