@@ -1,15 +1,27 @@
 {
-  "version": "0.0.5",
+  "version": "0.1.0",
   "name": "@bk/utils",
-  "main": "./lib/index.js",
-  "types": "./types/index.d.ts",
+  "type": "module",
+  "main": "./es/index.js",
+  "browser": "./es/index.js",
+  "module": "./es/index.js",
   "author": {
     "name": "Hu Kun",
     "email": "mrhukun@gmail.com"
   },
+  "typings": "./es/node.d.ts",
   "scripts": {
-    "build": "tsc"
+    "commonjs:build": "rm -rf ./lib && tsc",
+    "es:build": "rm -rf ./es && tsc --build ./es-tsconfig.json",
+    "build": "npm run commonjs:build && npm run es:build"
   },
+  "homepage": "https://github.com/kuunnnn/ts-utils",
+  "description": "util list",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kuunnnn/ts-utils"
+  },
+  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "crypto-browserify": "^3.12.0",
