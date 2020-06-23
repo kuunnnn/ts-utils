@@ -1,9 +1,8 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "name": "@bk/utils",
-  "type": "module",
-  "main": "./es/index.js",
-  "browser": "./es/index.js",
+  "main": "./lib/index.js",
+  "browser": "./lib/index.js",
   "module": "./es/index.js",
   "author": {
     "name": "Hu Kun",
