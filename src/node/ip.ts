@@ -1,4 +1,3 @@
-export * from "./common"
 import os, { NetworkInterfaceInfo } from "os"
 
 export function ipAddress (type:"IPv4"|"IPv6") {
