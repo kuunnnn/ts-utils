@@ -1,20 +1,9 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "strict": true,
-    "outDir": "./es",
-    "declaration": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  },
-  "include": [
-    "./src"
-  ]
+    "rootDir": "./src",
+    "outDir": "./es"
+  }
 }

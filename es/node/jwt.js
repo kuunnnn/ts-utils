@@ -1,14 +1,12 @@
-import { HMAC_SHA256 } from "../security/hash";
-import { safeStringCompare } from "../compare";
+import { HMAC_SHA256 } from '../security/hash';
+import { safeStringCompare } from '../security/compare';
 function hexToJwtBase64(hex) {
-    const base64 = Buffer.from(hex, "hex").toString("base64");
-    return base64.replace(/=/g, "")
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_");
+    const base64 = Buffer.from(hex, 'hex').toString('base64');
+    return base64.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 }
 function throw401Error(msg) {
     const error = new Error(msg);
-    error.name = "AuthorizationError";
+    error.name = 'AuthorizationError';
     error.status = 401;
     throw error;
 }
@@ -25,27 +23,27 @@ export function decodeHeader(token) {
     if (!header) {
         return null;
     }
-    return safeParseJson(Buffer.from(header, "base64").toString("utf-8"));
+    return safeParseJson(Buffer.from(header, 'base64').toString('utf-8'));
 }
 export function decodePayload(token) {
     const payload = token.split('.', 2)[1];
     if (!payload) {
         return null;
     }
-    return safeParseJson(Buffer.from(payload, "base64").toString("utf-8"));
+    return safeParseJson(Buffer.from(payload, 'base64').toString('utf-8'));
 }
 export function resolveTokenByHeader(headers) {
     if (!headers.authorization) {
-        throw401Error("Not found Token!");
+        throw401Error('Not found Token!');
     }
-    const [bearer, token] = headers.authorization.split(" ");
-    if (bearer !== "Bearer" || !token) {
+    const [bearer, token] = headers.authorization.split(' ');
+    if (bearer !== 'Bearer' || !token) {
         throw401Error("Bad Authorization header format. Format is 'Authorization: Bearer <token>'");
     }
     return token;
 }
 export function verifySignature(token, secret) {
-    const [header, payload, sign] = (token || "").split(".");
+    const [header, payload, sign] = (token || '').split('.');
     if (!header || !payload || !sign) {
         return false;
     }
@@ -69,3 +67,4 @@ export function verify(token, secret) {
     }
     return payload;
 }
+//# sourceMappingURL=jwt.js.map

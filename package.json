@@ -1,18 +1,27 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "name": "@kuunnnn/utils",
-  "main": "./lib/index.js",
-  "browser": "./lib/index.js",
-  "module": "./es/index.js",
+  "main": "./cs/index.js",
+  "types": "./cs/index.d.ts",
+  "module": "./es/browser.js",
+  "browser": "./cs/browser.js",
+  "jsnext:main": "./es/browser.js",
   "author": {
     "name": "Hu Kun",
     "email": "mrhukun@gmail.com"
   },
-  "typings": "./es/node/index.d.ts",
+  "files": [
+    "./es",
+    "./cs",
+    "./src"
+  ],
   "scripts": {
-    "commonjs:build": "rm -rf ./lib && tsc",
-    "es:build": "rm -rf ./es && tsc --build ./es-tsconfig.json",
-    "build": "npm run commonjs:build && npm run es:build"
+    "prebuild:es": "rm -rf ./es",
+    "prebuild:cs": "rm -rf ./cs",
+    "build:cs": "tsc",
+    "build:es": "tsc --build ./es-tsconfig.json",
+    "fix": "gts fix",
+    "compile": "npm run build:cs && npm run build:es"
   },
   "homepage": "https://github.com/kuunnnn/ts-utils",
   "publishConfig": {
@@ -21,23 +30,27 @@
   "description": "util list",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kuunnnn/ts-utils"
+    "url": "https://github.com/kuunnnn/utils"
   },
   "license": "MIT",
   "dependencies": {
-    "@types/jsonwebtoken": "^8.5.0",
     "bcryptjs": "^2.4.3",
     "crypto-browserify": "^3.12.0",
     "jsonwebtoken": "^8.5.1",
     "node-forge": "^0.9.1",
     "node-rsa": "^1.0.8",
+    "query-string": "^6.13.5",
     "randombytes": "^2.1.0",
     "svg-captcha": "^1.4.0"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/node-forge": "^0.9.4",
     "@types/node-rsa": "^1.0.0",
-    "@types/randombytes": "^2.0.0"
+    "@types/randombytes": "^2.0.0",
+    "gts": "^2.0.2",
+    "typescript": "^3.8.3",
+    "@types/node": "^13.11.1"
   }
 }

@@ -1,4 +1,4 @@
-import NodeRSA from "node-rsa";
+import NodeRSA from 'node-rsa';
 
 class ProxyRsa {
   private key: NodeRSA;
@@ -8,11 +8,11 @@ class ProxyRsa {
   }
 
   getPublicDer() {
-    return this.key.exportKey("pkcs8-public-pem");
+    return this.key.exportKey('pkcs8-public-pem');
   }
 
   getPrivateDer() {
-    return this.key.exportKey("pkcs8-private-pem");
+    return this.key.exportKey('pkcs8-private-pem');
   }
 
   /**
@@ -21,7 +21,7 @@ class ProxyRsa {
    * @return {string}
    */
   encrypt(data: string) {
-    return this.key.encryptPrivate(Buffer.from(data), "base64", "utf8");
+    return this.key.encryptPrivate(Buffer.from(data), 'base64', 'utf8');
   }
 
   /**
@@ -30,7 +30,7 @@ class ProxyRsa {
    * @return {string}
    */
   encryptByPublicKey(data: string) {
-    return this.key.encrypt(Buffer.from(data), "base64", "utf8");
+    return this.key.encrypt(Buffer.from(data), 'base64', 'utf8');
   }
 
   /**
@@ -39,7 +39,7 @@ class ProxyRsa {
    * @return {string}
    */
   decrypt(data: string) {
-    return this.key.decrypt(data, "utf8");
+    return this.key.decrypt(data, 'utf8');
   }
 
   /**
@@ -48,7 +48,7 @@ class ProxyRsa {
    * @return {string}
    */
   decryptByPrivateKey(data: string) {
-    return this.key.decryptPublic(data, "utf8");
+    return this.key.decryptPublic(data, 'utf8');
   }
 
   /**
@@ -57,7 +57,7 @@ class ProxyRsa {
    * @return {string}
    */
   sing(text: string) {
-    this.key.sign(Buffer.from(text), "base64", "utf8");
+    this.key.sign(Buffer.from(text), 'base64', 'utf8');
   }
 
   /**
@@ -67,24 +67,24 @@ class ProxyRsa {
    * @return {boolean}
    */
   verify(text: string, signature: string): boolean {
-    return this.key.verify(Buffer.from(text), signature, "utf8", "base64");
+    return this.key.verify(Buffer.from(text), signature, 'utf8', 'base64');
   }
 }
 
 export function createRsaByPublicKey(publicPem: string) {
-  const key = new NodeRSA(publicPem, "pkcs8-public-pem");
-  key.setOptions({ encryptionScheme: "pkcs1" });
+  const key = new NodeRSA(publicPem, 'pkcs8-public-pem');
+  key.setOptions({encryptionScheme: 'pkcs1'});
   return new ProxyRsa(key);
 }
 
-export function createRsa(size: number = 512): ProxyRsa {
-  const key = new NodeRSA({ b: size });
-  key.setOptions({ encryptionScheme: "pkcs1" });
+export function createRsa(size = 512): ProxyRsa {
+  const key = new NodeRSA({b: size});
+  key.setOptions({encryptionScheme: 'pkcs1'});
   return new ProxyRsa(key);
 }
 
 export function createRsaByPrivateKey(privatePem: string) {
-  const key = new NodeRSA(privatePem, "pkcs8-private-pem");
-  key.setOptions({ encryptionScheme: "pkcs1" });
+  const key = new NodeRSA(privatePem, 'pkcs8-private-pem');
+  key.setOptions({encryptionScheme: 'pkcs1'});
   return new ProxyRsa(key);
 }
